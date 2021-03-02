@@ -3,10 +3,16 @@ import styled from 'styled-components'
 
 function ProfileMenu() {
     return (
-        <div>
+        <Container>
             Profile Menu
-        </div>
+        </Container>
     )
 }
 
 export default ProfileMenu
+
+const Container = styled.div`
+    width: 50px;
+    height: 60px;
+    background: gray;
+`
