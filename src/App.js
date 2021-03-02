@@ -33,10 +33,6 @@ function App() {
     getChannels();
   }, []);
 
-  console.log(user);
-
-  console.log(rooms);
-
   return (
     <div className="App">
       <Router>

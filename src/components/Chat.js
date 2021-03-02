@@ -13,18 +13,6 @@ function Chat({ user }) {
     const [ channel, setChannel ] = useState();
     const [ messages, setMessages ] = useState([]);
 
-    const getMessages = () => {
-        db.collection('rooms')
-        .doc(channelId)
-        .collection('messages')
-        .orderBy('timestamp', 'asc')
-        .onSnapshot((snapshot)=>{
-            let messages = snapshot.docs.map((doc)=>doc.data());
-            console.log(messages)
-            setMessages(messages);
-        })
-    }
-
     const sendMessage = (text) => {
         if(channelId) {
             let payload = {
@@ -37,17 +25,39 @@ function Chat({ user }) {
         }
     }
 
-    const getChannel = () => {
-        db.collection('rooms')
-        .doc(channelId)
-        .onSnapshot((snapshot)=>{
-            setChannel(snapshot.data());
-        })
+    const deleteMessage = (timestamp) => {
+        db.collection('rooms').doc(channelId).collection('messages').where('timestamp', "==", timestamp).get()
+        .then(querySnapshot => { querySnapshot.docs[0].ref.delete(); })
+    }
+
+    const scrollToBottom = () => {
+        document.getElementById('bottomScroll').scrollIntoView({ behavior: 'smooth'})
     }
     
     useEffect(() => {
+
+        const getMessages = () => {
+            db.collection('rooms')
+            .doc(channelId)
+            .collection('messages')
+            .orderBy('timestamp', 'asc')
+            .onSnapshot((snapshot)=>{
+                let messages = snapshot.docs.map((doc)=>doc.data());
+                setMessages(messages);
+            })
+        }
+
+        const getChannel = () => {
+            db.collection('rooms')
+            .doc(channelId)
+            .onSnapshot((snapshot)=>{
+                setChannel(snapshot.data());
+            })
+        }
+
         getChannel();
         getMessages();
+        scrollToBottom();
     }, [channelId])
 
     return (
@@ -70,7 +80,10 @@ function Chat({ user }) {
                 {
                     messages.length > 0 &&
                     messages.map((data, index)=>(
-                        <ChatMessage 
+                        <ChatMessage
+                            deleteMessage={deleteMessage}
+                            user={user}
+                            data={data}
                             text={data.text}
                             name={data.user}
                             image={data.userImage}
@@ -79,6 +92,10 @@ function Chat({ user }) {
                         />
                     ))
                 }
+                <div 
+                    style={{float: 'left', clear: 'both'}}
+                    id='bottomScroll'>
+                </div>
             </MessageContainer>
             <ChatInput sendMessage={sendMessage} />
         </Container>

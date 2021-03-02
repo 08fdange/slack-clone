@@ -1,12 +1,17 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 import AddIcon from '@material-ui/icons/Add'
 import { sidebarItems } from '../data/SidebarData.js'
-import db from '../firebase'
 import { useHistory} from 'react-router-dom'
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import ArrowRightIcon from '@material-ui/icons/ArrowRight';
+import db from '../firebase'
 
 function Sidebar({rooms}) {
+
+    const [ channelDrawer, setChannelDrawer ] = useState(false);
+    const [ dmDrawer, setDmDrawer ] = useState(false);
 
     const history = useHistory();
 
@@ -25,6 +30,15 @@ function Sidebar({rooms}) {
         }
 
     }
+
+    const handleChannelToggle = () => {
+        setChannelDrawer(!channelDrawer);
+    }
+
+    const handleDmToggle = () => {
+        setDmDrawer(!dmDrawer);
+    }
+
     return (
         <Container> 
             <WorkSpaceContainer>
@@ -47,21 +61,40 @@ function Sidebar({rooms}) {
             </MainChannels>
             <ChannelsContainer>
                 <NewChannelContainer>
-                    <div>
+                    <ChannelToggle onClick={handleChannelToggle}>
+                        {
+                            channelDrawer ? <span><ArrowDown/></span> : <span><ArrowRight/></span>
+                        }
                         Channels
-                    </div>
+                    </ChannelToggle>
                     <AddIconStyled onClick={addChannel}/>
                 </NewChannelContainer>
             </ChannelsContainer>
-            <ChannelsList>
-                {
-                    rooms.map((item, key) => (
-                        <Channel onClick={() => goToChannel(item.id)} key={key}>
-                           # {item.name}
-                        </Channel>    
-                    ))
-                }
-            </ChannelsList>
+            {
+                channelDrawer ? (
+                    <ChannelsList>
+                    {
+                        rooms.map((item, key) => (
+                            <Channel onClick={() => goToChannel(item.id)} key={key}>
+                                # {item.name}
+                            </Channel>    
+                        ))
+                    }
+                    </ChannelsList>
+                ) : null
+            }
+            <DirectMessageContainer>
+                <NewDmContainer>
+                    <DmToggle onClick={handleDmToggle}>
+                        {
+                            dmDrawer ? <span><ArrowDown/></span> : <span><ArrowRight/></span>
+                        }
+                        Direct Messages
+                    </DmToggle>
+                    <AddIconStyled />
+                </NewDmContainer>
+            </DirectMessageContainer>
+            
         </Container>
     )
 }
@@ -122,6 +155,24 @@ const NewChannelContainer = styled.div`
     padding-left: 19px;
     padding-right: 12px;
 `
+const ChannelToggle = styled.div`
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-weight: 600;
+`
+const ArrowDown = styled(ArrowDropDownIcon)`
+    border-radius: 2px;
+    :hover {
+        background: rgb(58 54 60); 
+    }
+`
+const ArrowRight = styled(ArrowRightIcon)`
+    border-radius: 2px;
+    :hover {
+        background: rgb(58 54 60);
+    }
+`
 const ChannelsList = styled.div`
     color: #aeb2b5;
 `
@@ -141,4 +192,21 @@ const AddIconStyled = styled(AddIcon)`
     :hover {
         background: #28292f;
     }
+`
+const DirectMessageContainer = styled.div`
+    color: #aeb2b5;
+`
+const NewDmContainer = styled.div`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 28px;
+    padding-left: 19px;
+    padding-right: 12px;
+`
+const DmToggle = styled.div`
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-weight: 600;
 `

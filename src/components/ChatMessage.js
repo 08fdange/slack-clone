@@ -1,21 +1,34 @@
 import React from 'react'
 import styled from 'styled-components'
+import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 
-function ChatMessage({text,name,image,timestamp}) {
+function ChatMessage({user,data,text,name,image,timestamp,deleteMessage}) {
+
+    const handleDelete = () => {
+        deleteMessage(timestamp)
+    }
+
     return (
         <Container>
-            <UserAvatar>
-                <img src={image} alt={name} />
-            </UserAvatar>
-            <MessageContent>
-                <Name>
-                    <b>{name}</b>
-                    <span>{new Date(timestamp.toDate()).toUTCString()}</span>
-                </Name>
-                <Text>
-                    {text}
-                </Text>
-            </MessageContent>
+            <Message>
+                <UserAvatar>
+                    <img src={image} alt={name} />
+                </UserAvatar>
+                <MessageContent>
+                    <Name>
+                        <b>{name}</b>
+                        <span>{new Date(timestamp.toDate()).toUTCString()}</span>
+                    </Name>
+                    <Text>
+                        {text}
+                    </Text>
+                </MessageContent>
+            </Message>
+            <DeleteButton onClick={handleDelete}>
+                {
+                    user.name === name ? <HighlightOffIcon /> : null
+                }
+            </DeleteButton>
         </Container>
     )
 }
@@ -24,11 +37,16 @@ export default ChatMessage
 
 const Container = styled.div`
     display: flex;
-    align-items: center;
-    padding: 8px 20px;
+    justify-content: space-between;
+    align-content: center;
     :hover {
         background: rgb(58 54 60);
     }
+`
+const Message = styled.div`
+    display: flex;
+    align-items: center;
+    padding: 8px 20px;
 `
 const UserAvatar = styled.div`
     width: 36px;
@@ -61,4 +79,11 @@ const Name = styled.span`
 `
 const Text = styled.span`
 
+`
+const DeleteButton = styled.div`
+    display: flex;
+    align-items: center;
+    color: white;
+    margin-right: 19px;
+    cursor: pointer;
 `
