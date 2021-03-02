@@ -53,7 +53,11 @@ function App() {
                 <Chat user={user}/>
               </Route>
               <Route path='/'>
-                Select or Create Channel
+                <SelectChannel>
+                  <Content>
+                    Select or Create Channel
+                  </Content>
+                </SelectChannel>
               </Route>
             </Switch>  
           </Main>
@@ -70,9 +74,28 @@ const Container = styled.div`
   width: 100%;
   height: 100vh;
   display: grid;
-  grid-template-rows: 38px auto;
+  grid-template-rows: 38px minmax(0, 1fr);
 `
 const Main = styled.div`
   display: grid;
   grid-template-columns: 260px auto;
+`
+const SelectChannel = styled.div`
+  width: 100%;
+  height: 100vh;
+  background-color: #1a1b1f;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+const Content = styled.div`
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #FFFFFF;
+  background-color: rgb(20 18 22);
+  padding: 50px;
+  border-radius: 5px;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 12%), 0 1px rgb(FFFFFF / 24%);
+  font-weight: 700;
 `

@@ -91,6 +91,7 @@ const Container = styled.div`
     background: #1a1b1f;
     display: grid;
     grid-template-rows: 64px auto min-content;
+    min-height: 0;
 `
 const Header = styled.div`
     padding-left: 20px;
@@ -101,7 +102,9 @@ const Header = styled.div`
     justify-content: space-between;
 `
 const MessageContainer = styled.div`
-
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
 `
 const Channel = styled.div`
 
