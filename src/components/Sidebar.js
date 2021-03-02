@@ -4,8 +4,17 @@ import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 import AddIcon from '@material-ui/icons/Add'
 import { sidebarItems } from '../data/SidebarData.js'
 import db from '../firebase'
+import { useHistory} from 'react-router-dom'
 
 function Sidebar({rooms}) {
+
+    const history = useHistory();
+
+    const goToChannel = (id) => {
+        if(id) {
+            history.push(`/room/${id}`)
+        }
+    }
 
     const addChannel = () => {
         const promptName = prompt("Enter Channel Name");
@@ -41,13 +50,13 @@ function Sidebar({rooms}) {
                     <div>
                         Channels
                     </div>
-                    <AddIcon onClick={addChannel}/>
+                    <AddIconStyled onClick={addChannel}/>
                 </NewChannelContainer>
             </ChannelsContainer>
             <ChannelsList>
                 {
                     rooms.map((item, key) => (
-                        <Channel key={key}>
+                        <Channel onClick={() => goToChannel(item.id)} key={key}>
                            # {item.name}
                         </Channel>    
                     ))
@@ -60,7 +69,7 @@ function Sidebar({rooms}) {
 export default Sidebar
 
 const Container = styled.div`
-    background: #3F0E40;
+    background: rgb(20 18 22);
 `
 const WorkSpaceContainer = styled.div`
     color: white;
@@ -70,7 +79,7 @@ const WorkSpaceContainer = styled.div`
     padding-left: 19px;
     padding-right: 19px;
     justify-content: space-between;
-    border-bottom: 1px solid #532753;
+    border-bottom: 1px solid rgb(255 255 255 / 20%);
 `
 const Name = styled.div``
 
@@ -78,8 +87,8 @@ const NewMessage = styled.div`
     width: 36px;
     height: 36px;
     background: white;
-    color: #3F0E40;
-    fill: #3F0E40;
+    color: #151619;
+    fill: #151619;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -90,7 +99,7 @@ const MainChannels = styled.div`
 
 `
 const MainChannelItem = styled.div`
-    color: rgb(188, 171, 188);
+    color: #aeb2b5;
     display: grid;
     grid-template-columns: 15% auto;
     height: 28px;
@@ -98,11 +107,11 @@ const MainChannelItem = styled.div`
     padding-left: 19px;
     cursor: pointer;
     :hover {
-        background: #350D36;
+        background: rgb(58 54 60);
     }
 `
 const ChannelsContainer = styled.div`
-    color: rgb(188, 171, 188);
+    color: #aeb2b5;
     margin-top: 10px;
 `
 const NewChannelContainer = styled.div`
@@ -114,7 +123,7 @@ const NewChannelContainer = styled.div`
     padding-right: 12px;
 `
 const ChannelsList = styled.div`
-    color: rgb(188, 171, 188);
+    color: #aeb2b5;
 `
 const Channel = styled.div`
     height: 28px;
@@ -123,6 +132,13 @@ const Channel = styled.div`
     padding-left: 19px;
     cursor: pointer;
     :hover {
-        background: #350D36;
+        background: rgb(58 54 60);
+    }
+`
+const AddIconStyled = styled(AddIcon)`
+    cursor: pointer;
+    border-radius: 2px;
+    :hover {
+        background: #28292f;
     }
 `

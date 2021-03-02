@@ -4,7 +4,7 @@ import AccessTimeIcon from '@material-ui/icons/AccessTime'
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline'
 
 
-function Header() {
+function Header({ user, signOut }) {
     return (
         <Container>
             <Main>
@@ -18,10 +18,10 @@ function Header() {
             </Main>
             <UserContainer>
                 <Name>
-                    Frank
+                    {user.name}
                 </Name>
-                <UserImage>
-                    <img src='https://i.imgur.com/6VBx3io.png' alt='User Profile'/>
+                <UserImage onClick={signOut}>
+                    <img src={user.avatar ? user.avatar : "https://i.imgur.com/6VBx3io.png"} alt="Log Out"/>
                 </UserImage>
             </UserContainer>
         </Container>
@@ -31,13 +31,13 @@ function Header() {
 export default Header
 
 const Container = styled.div`
-    background: #350d36;
+    background: rgb(20 18 22);
     color: white;
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
-    box-shadow: 0 1px 0 0 rgb(255 255 255 / 10%);
+    box-shadow: 0 1px 0 0 rgb(255 255 255 / 20%);
 `
 const Main = styled.div`
     display: flex;
@@ -50,7 +50,7 @@ const SearchContainer = styled.div`
     margin-right: 16px;
 `
 const Search = styled.div`
-    box-shadow: inset 0 0 0 1px rgb(104 74 104);
+    box-shadow: inset 0 0 0 1px #B3B3B3;
     width: 100%;
     border-radius: 6px;
     display: flex;
@@ -87,6 +87,7 @@ const UserImage = styled.div`
     height: 28px;
     border: 2px solid white;
     border-radius: 3px;
+    cursor: pointer;
 
     img{
         width: 100%;
