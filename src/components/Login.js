@@ -10,8 +10,10 @@ function Login({setUser}) {
             const newUser = {
                 name: resp.user.displayName,
                 avatar: resp.user.photoURL,
+                uid: resp.user.uid,
             }
             setUser(newUser);
+            console.log(JSON.stringify(newUser))
             localStorage.setItem('user', JSON.stringify(newUser));
         })
     }
