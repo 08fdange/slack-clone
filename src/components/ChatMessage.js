@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 
-function ChatMessage({user,data,text,name,image,timestamp,deleteMessage}) {
+function ChatMessage({user,data,text,name,userID,image,timestamp,deleteMessage}) {
 
     const handleDelete = () => {
         deleteMessage(timestamp)
@@ -26,7 +26,7 @@ function ChatMessage({user,data,text,name,image,timestamp,deleteMessage}) {
             </Message>
             <DeleteButton onClick={handleDelete}>
                 {
-                    user.name === name ? <HighlightOffIcon /> : null
+                    user.uid === userID ? <HighlightOffIcon /> : null
                 }
             </DeleteButton>
         </Container>

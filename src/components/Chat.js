@@ -19,6 +19,7 @@ function Chat({ user }) {
                 text: text,
                 timestamp: firebase.firestore.Timestamp.now(),
                 user: user.name,
+                userID: user.uid,
                 userImage: user.avatar
             }
             db.collection('rooms').doc(channelId).collection('messages').add(payload);
@@ -86,6 +87,7 @@ function Chat({ user }) {
                             data={data}
                             text={data.text}
                             name={data.user}
+                            userID={data.userID}
                             image={data.userImage}
                             timestamp={data.timestamp}
                             key={index} 
