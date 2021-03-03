@@ -24,10 +24,11 @@ function App() {
   const getChannels = () => {
     db.collection('rooms').onSnapshot((snapshot) => {
       setRooms(snapshot.docs.map((doc) => {
-        return { id: doc.id, name: doc.data().name }
+        return { id: doc.id, name: doc.data().name, private: doc.data().private, users: doc.data().users }
       }))
     })
   }
+
 
   useEffect(() => {
     getChannels();
@@ -43,7 +44,7 @@ function App() {
         <Container>
           <Header user={user} signOut={signOut}/>
           <Main>
-            <Sidebar rooms={rooms} />
+            <Sidebar rooms={rooms} user={user}/>
             <Switch>
               <Route path='/room/:channelId'>
                 <Chat user={user}/>

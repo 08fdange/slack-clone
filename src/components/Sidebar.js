@@ -8,11 +8,10 @@ import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 import db from '../firebase'
 
-function Sidebar({rooms}) {
+function Sidebar({user,rooms}) {
 
-    const [ channelDrawer, setChannelDrawer ] = useState(false);
-    const [ dmDrawer, setDmDrawer ] = useState(false);
-
+    const [ channelDrawer, setChannelDrawer ] = useState(true);
+    const [ dmDrawer, setDmDrawer ] = useState(true);
     const history = useHistory();
 
     const goToChannel = (id) => {
@@ -28,7 +27,6 @@ function Sidebar({rooms}) {
                 name: promptName
             })
         }
-
     }
 
     const handleChannelToggle = () => {
@@ -75,25 +73,40 @@ function Sidebar({rooms}) {
                     <ChannelsList>
                     {
                         rooms.map((item, key) => (
+                            !item.private ?
                             <Channel onClick={() => goToChannel(item.id)} key={key}>
                                 # {item.name}
-                            </Channel>    
+                            </Channel> : null  
                         ))
                     }
                     </ChannelsList>
                 ) : null
             }
-            <DirectMessageContainer>
-                <NewDmContainer>
-                    <DmToggle onClick={handleDmToggle}>
+            <PrivateContainer>
+                <NewPrivateContainer>
+                    <PrivateToggle onClick={handleDmToggle}>
                         {
                             dmDrawer ? <span><ArrowDown/></span> : <span><ArrowRight/></span>
                         }
-                        Direct Messages
-                    </DmToggle>
+                        Private Channels
+                    </PrivateToggle>
                     <AddIconStyled />
-                </NewDmContainer>
-            </DirectMessageContainer>
+                </NewPrivateContainer>
+            </PrivateContainer>
+            {
+                dmDrawer ? (
+                    <ChannelsList>
+                        {
+                            rooms.map((item, key) => (
+                                item.private && item.users.find(id => id === user.uid) ?
+                                <Channel onClick={() => goToChannel(item.id)} key={key}>
+                                    # {item.name}
+                                </Channel> : null
+                            ))
+                        }
+                    </ChannelsList>
+                ) : null
+            }
             
         </Container>
     )
@@ -193,10 +206,10 @@ const AddIconStyled = styled(AddIcon)`
         background: #28292f;
     }
 `
-const DirectMessageContainer = styled.div`
+const PrivateContainer = styled.div`
     color: #aeb2b5;
 `
-const NewDmContainer = styled.div`
+const NewPrivateContainer = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -204,7 +217,7 @@ const NewDmContainer = styled.div`
     padding-left: 19px;
     padding-right: 12px;
 `
-const DmToggle = styled.div`
+const PrivateToggle = styled.div`
     display: flex;
     align-items: center;
     cursor: pointer;
