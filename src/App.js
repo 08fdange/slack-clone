@@ -1,19 +1,33 @@
-import { useState, useEffect } from 'react'
-import {BrowserRouter as Router, Route, Switch} from 'react-router-dom'
-import Header from './components/Header'
-import Sidebar from './components/Sidebar'
-import Chat from './components/Chat'
-import Login from './components/Login'
-import styled from 'styled-components'
-import db from './firebase'
-import { auth } from './firebase'
-import './App.css'
+import React, { useState, useEffect } from 'react';
+import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
+import Modal from '@material-ui/core/Modal';
+import ModalContent from './components/ModalContent';
+import Header from './components/Header';
+import Sidebar from './components/Sidebar';
+import Chat from './components/Chat';
+import Login from './components/Login';
+import styled from 'styled-components';
+import db from './firebase';
+import { auth } from './firebase';
+import './App.css';
 
-function App() {
+const App = () => {
 
+  // useState
   const [rooms, setRooms] = useState([]);
   const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
+  const [open, setOpen] = useState(false);
 
+  // Modal
+  const handleOpen = () => {
+    setOpen(true);
+  }
+
+  const handleClose = () => {
+    setOpen(false);
+  }
+
+  // Sign Out
   const signOut = () => {
     auth.signOut().then(() => {
       localStorage.removeItem('user');
@@ -21,6 +35,7 @@ function App() {
     })
   }
 
+  // Get Slack Channels
   const getChannels = () => {
     db.collection('rooms').onSnapshot((snapshot) => {
       setRooms(snapshot.docs.map((doc) => {
@@ -28,7 +43,6 @@ function App() {
       }))
     })
   }
-
 
   useEffect(() => {
     getChannels();
@@ -41,24 +55,29 @@ function App() {
           !user ?
           <Login setUser={setUser}/>
           :
-        <Container>
-          <Header user={user} signOut={signOut}/>
-          <Main>
-            <Sidebar rooms={rooms} user={user}/>
-            <Switch>
-              <Route path='/room/:channelId'>
-                <Chat user={user}/>
-              </Route>
-              <Route path='/'>
-                <SelectChannel>
-                  <Content>
-                    Select or Create Channel
-                  </Content>
-                </SelectChannel>
-              </Route>
-            </Switch>  
-          </Main>
-        </Container>
+          <Container>
+            <Modal
+              open={open}
+              onClose={handleClose}
+            ><ModalContent/>
+            </Modal>
+            <Header user={user} signOut={signOut}/>
+            <Main>
+              <Sidebar rooms={rooms} user={user} handleOpen={handleOpen}/>
+              <Switch>
+                <Route path='/room/:channelId'>
+                  <Chat user={user}/>
+                </Route>
+                <Route path='/'>
+                  <SelectChannel>
+                    <Content>
+                      Select or Create Channel
+                    </Content>
+                  </SelectChannel>
+                </Route>
+              </Switch>  
+            </Main>
+          </Container>
         } 
       </Router>
     </div>

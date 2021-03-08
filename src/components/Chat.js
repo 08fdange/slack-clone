@@ -69,7 +69,7 @@ function Chat({ user }) {
                         # {channel && channel.name}
                     </ChannelName>
                     <ChannelInfo>
-                        Learn, Grow and become a Developer with FrankDAngeloDev
+                        {channel && channel.description}
                     </ChannelInfo>
                 </Channel>
                 <ChannelDetails>

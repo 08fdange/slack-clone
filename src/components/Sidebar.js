@@ -6,9 +6,9 @@ import { sidebarItems } from '../data/SidebarData.js'
 import { useHistory} from 'react-router-dom'
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
-import db from '../firebase'
+// import db from '../firebase'
 
-function Sidebar({user,rooms}) {
+function Sidebar({user,rooms, toggleModal, handleOpen}) {
 
     const [ channelDrawer, setChannelDrawer ] = useState(true);
     const [ dmDrawer, setDmDrawer ] = useState(true);
@@ -20,14 +20,14 @@ function Sidebar({user,rooms}) {
         }
     }
 
-    const addChannel = () => {
-        const promptName = prompt("Enter Channel Name");
-        if (promptName) {
-            db.collection('rooms').add({
-                name: promptName
-            })
-        }
-    }
+    // const addChannel = () => {
+    //     const promptName = prompt("Enter Channel Name");
+    //     if (promptName) {
+    //         db.collection('rooms').add({
+    //             name: promptName
+    //         })
+    //     }
+    // }
 
     const handleChannelToggle = () => {
         setChannelDrawer(!channelDrawer);
@@ -65,7 +65,7 @@ function Sidebar({user,rooms}) {
                         }
                         Channels
                     </ChannelToggle>
-                    <AddIconStyled onClick={addChannel}/>
+                    <AddIconStyled onClick={handleOpen}/>
                 </NewChannelContainer>
             </ChannelsContainer>
             {
@@ -90,7 +90,7 @@ function Sidebar({user,rooms}) {
                         }
                         Private Channels
                     </PrivateToggle>
-                    <AddIconStyled />
+                    <AddIconStyled onClick={handleOpen}/>
                 </NewPrivateContainer>
             </PrivateContainer>
             {
@@ -193,7 +193,7 @@ const Channel = styled.div`
     height: 28px;
     display: flex;
     align-items: center;
-    padding-left: 19px;
+    padding-left: 38px;
     cursor: pointer;
     :hover {
         background: rgb(58 54 60);
