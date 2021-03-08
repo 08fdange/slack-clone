@@ -35,6 +35,20 @@ const App = () => {
     })
   }
 
+  // Create Slack Channels
+  const createChannel = (channelInfo) => {
+    let payload = {
+      name: channelInfo.name,
+      description: channelInfo.description,
+      private: channelInfo.private
+    }
+    if (channelInfo.private) {
+      payload.users = [user.uid]
+    }
+    db.collection('rooms').add(payload);
+    handleClose();    
+  }
+
   // Get Slack Channels
   const getChannels = () => {
     db.collection('rooms').onSnapshot((snapshot) => {
@@ -59,7 +73,9 @@ const App = () => {
             <Modal
               open={open}
               onClose={handleClose}
-            ><ModalContent/>
+            ><ModalContent
+              createChannel={createChannel}
+            />
             </Modal>
             <Header user={user} signOut={signOut}/>
             <Main>

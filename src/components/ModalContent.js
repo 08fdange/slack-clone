@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Switch from '@material-ui/core/Switch';
 import { makeStyles } from '@material-ui/core/styles';
 import styled from 'styled-components';
-import db from '../firebase';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -35,48 +34,38 @@ const useStyles = makeStyles((theme) => ({
 const ModalContent = ({ createChannel }) => {
     const classes = useStyles();
 
-    const [name, setName] = useState("");
-    const [description, setDescription] = useState("");
-    const [privateC, setPrivateC] = useState(false);
-    const [newChannel, setNewChannel] = useState({})
+    const [state, setState] = useState({
+        name: "",
+        description: "",
+        private: false
+    })
 
-    const handleName = (event) => {
-        setName(event.target.value)
+    const handleChange = (event) => {
+        const { name, value } = event.target;
+        setState(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
     }
 
-    const handleDescription = (event) => {
-        setDescription(event.target.value)
+    const handleSwitch = (event) => {
+        const { name, checked} = event.target;
+        setState(prevState => ({
+            ...prevState,
+            [name]: checked
+        }))
     }
 
-    const handlePrivateSwitch = (event) => {
-        setPrivateC(!privateC)
-        console.log(event.target.checked)
-    }
-    
-    const onSubmit = (event) => {
-        event.preventDefault();
-        if (name !== "") {
-            db.collection('rooms').add({
-                name: name,
-                description: description,
-                private: privateC
+    const newChannel = () => {
+        if(state.name !== "") {
+            createChannel(state);
+            setState({
+                name: "",
+                description: "",
+                private: false
             })
-            setName("")
-            setDescription("")
-            setPrivateC(false)
-            console.log("ON SUBMIT")
         }
     }
-
-    useEffect(() => {
-        setNewChannel(
-            {
-                name: name,
-                description: description,
-                private: privateC 
-            }
-        )
-    },[])
 
     return(
     <div className={classes.paper}>
@@ -89,8 +78,10 @@ const ModalContent = ({ createChannel }) => {
             <form>
                 <input
                     type='text'
+                    name='name'
+                    value={state.name}
                     placeholder='Channel here...'
-                    onChange={(event) => (handleName)}
+                    onChange={(event) => handleChange(event)}
                 />
             </form>
         </InputContainer>
@@ -99,7 +90,9 @@ const ModalContent = ({ createChannel }) => {
             <form>
                 <input 
                     type='text'
-                    onChange={(event) => (handleDescription)}
+                    name='description'
+                    value={state.description}
+                    onChange={(event) => handleChange(event)}
                 />
             </form>
         </InputContainer>
@@ -109,15 +102,17 @@ const ModalContent = ({ createChannel }) => {
                 When a channel is set to private, it can only be viewed or joined by invitation.
             </p>
             <Switch 
+                name='private'
                 className={classes.toggle}
                 color='primary'
-                onChange={handlePrivateSwitch}
+                checked={state.private}
+                onChange={(event) => handleSwitch(event)}
             />
         </PrivateToggleContainer>
         <SubmitContainer>
             <SubmitButton
                 type='submit'
-                onClick={(event) => onSubmit(event)}
+                onClick={newChannel}
             ><b>Create</b></SubmitButton>
         </SubmitContainer>
     </div>
