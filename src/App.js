@@ -5,6 +5,7 @@ import ModalContent from './components/ModalContent';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import Chat from './components/Chat';
+import DetailsBar from './components/DetailsBar';
 import Login from './components/Login';
 import styled from 'styled-components';
 import db from './firebase';
@@ -16,9 +17,10 @@ const App = () => {
   // useState
   const [rooms, setRooms] = useState([]);
   const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
+  const [detailsBar, setDetailsBar] = useState(false);
   const [open, setOpen] = useState(false);
 
-  // Modal
+  // Modal 
   const handleOpen = () => {
     setOpen(true);
   }
@@ -58,6 +60,12 @@ const App = () => {
     })
   }
 
+  // Details Bar 
+  
+  const handleDetails = () => {
+    setDetailsBar(!detailsBar);
+  }
+
   useEffect(() => {
     getChannels();
   }, []);
@@ -78,11 +86,11 @@ const App = () => {
             />
             </Modal>
             <Header user={user} signOut={signOut}/>
-            <Main>
+              <Main>
               <Sidebar rooms={rooms} user={user} handleOpen={handleOpen}/>
               <Switch>
                 <Route path='/room/:channelId'>
-                  <Chat user={user}/>
+                  <Chat user={user} handleDetails={handleDetails}/>
                 </Route>
                 <Route path='/'>
                   <SelectChannel>
@@ -91,7 +99,8 @@ const App = () => {
                     </Content>
                   </SelectChannel>
                 </Route>
-              </Switch>  
+              </Switch>
+              {detailsBar ? <DetailsBar handleDetails={handleDetails}/> : null}    
             </Main>
           </Container>
         } 
@@ -110,7 +119,7 @@ const Container = styled.div`
 `
 const Main = styled.div`
   display: grid;
-  grid-template-columns: 260px auto;
+  grid-template-columns: 260px 2fr auto;
 `
 const SelectChannel = styled.div`
   width: 100%;

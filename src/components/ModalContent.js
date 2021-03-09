@@ -119,6 +119,8 @@ const ModalContent = ({ createChannel }) => {
     )
 }
 
+export default ModalContent;
+
 const InputContainer = styled.div`
     border: 1px solid #8D8D8E;
     border-radius: 4px;
@@ -174,5 +176,3 @@ const SubmitButton = styled.button`
     }
 
 `
-
-export default ModalContent;

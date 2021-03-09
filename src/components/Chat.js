@@ -7,7 +7,7 @@ import db from '../firebase'
 import { useParams } from 'react-router-dom'
 import firebase from 'firebase'
 
-function Chat({ user }) {
+function Chat({ user, handleDetails }) {
 
     let { channelId } = useParams();
     const [ channel, setChannel ] = useState();
@@ -73,8 +73,7 @@ function Chat({ user }) {
                     </ChannelInfo>
                 </Channel>
                 <ChannelDetails>
-                    <div>Details</div>
-                    <Info />
+                    <Info onClick={handleDetails}/>
                 </ChannelDetails>
             </Header>
             <MessageContainer>
@@ -116,8 +115,9 @@ const Header = styled.div`
     padding-left: 20px;
     padding-right: 20px;
     display: flex;
+    height: 64px;
     align-items: center;
-    border-bottom: 1px solid rgba(83, 39, 83, .13);
+    border-bottom: 1px solid rgba(121, 121, 121, .6);
     justify-content: space-between;
 `
 const MessageContainer = styled.div`
@@ -140,6 +140,12 @@ const ChannelInfo = styled.div`
 `
 const Info = styled(InfoOutlinedIcon)`
     margin-left: 10px;
+    padding: 6px;
+    cursor: pointer;
+    border-radius: 3px;
+    :hover {
+        background: #28292f;
+    }
 `
 const ChannelDetails = styled.div`
     display: flex;

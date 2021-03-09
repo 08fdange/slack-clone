@@ -20,15 +20,6 @@ function Sidebar({user,rooms, toggleModal, handleOpen}) {
         }
     }
 
-    // const addChannel = () => {
-    //     const promptName = prompt("Enter Channel Name");
-    //     if (promptName) {
-    //         db.collection('rooms').add({
-    //             name: promptName
-    //         })
-    //     }
-    // }
-
     const handleChannelToggle = () => {
         setChannelDrawer(!channelDrawer);
     }
@@ -116,6 +107,7 @@ export default Sidebar
 
 const Container = styled.div`
     background: rgb(20 18 22);
+    border-right: 1px solid rgba(121, 121, 121, .6);
 `
 const WorkSpaceContainer = styled.div`
     color: white;
@@ -125,9 +117,11 @@ const WorkSpaceContainer = styled.div`
     padding-left: 19px;
     padding-right: 19px;
     justify-content: space-between;
-    border-bottom: 1px solid rgb(255 255 255 / 20%);
+    border-bottom: 1px solid rgba(121, 121, 121, .6);
 `
-const Name = styled.div``
+const Name = styled.div`
+    font-weight: bold;
+`
 
 const NewMessage = styled.div`
     width: 36px;
