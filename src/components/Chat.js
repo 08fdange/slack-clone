@@ -124,6 +124,18 @@ const MessageContainer = styled.div`
     display: flex;
     flex-direction: column;
     overflow-y: scroll;
+
+    ::-webkit-scrollbar {
+        width: .7em;
+    }
+    ::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+    }
+    ::-webkit-scrollbar-thumb {
+        background-color: #C6C8C9;
+        border-radius: 10px;
+    }
+
 `
 const Channel = styled.div`
 
