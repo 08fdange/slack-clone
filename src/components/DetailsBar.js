@@ -11,6 +11,9 @@ const DetailsBar = ({ handleDetails }) => {
                 </HeaderText>
                 <StyledCloseIcon onClick={handleDetails}/>
             </Header>
+            <Body>
+
+            </Body>
         </Container>
     )
 }
@@ -43,5 +46,8 @@ const StyledCloseIcon = styled(CloseOutlinedIcon)`
     :hover {
         background: #28292f;
     }
+`
+const Body = styled.div`
+
 `
 

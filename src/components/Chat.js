@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef} from 'react'
 import styled from 'styled-components'
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined'
 import ChatInput from './ChatInput'
@@ -12,6 +12,7 @@ function Chat({ user, handleDetails }) {
     let { channelId } = useParams();
     const [ channel, setChannel ] = useState();
     const [ messages, setMessages ] = useState([]);
+    const messagesEndRef = useRef(null);
 
     const sendMessage = (text) => {
         if(channelId) {
@@ -32,7 +33,7 @@ function Chat({ user, handleDetails }) {
     }
 
     const scrollToBottom = () => {
-        document.getElementById('bottomScroll').scrollIntoView({ behavior: 'smooth'})
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
     }
     
     useEffect(() => {
@@ -58,8 +59,11 @@ function Chat({ user, handleDetails }) {
 
         getChannel();
         getMessages();
-        scrollToBottom();
     }, [channelId])
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages]);
 
     return (
         <Container>
@@ -95,7 +99,7 @@ function Chat({ user, handleDetails }) {
                 }
                 <div 
                     style={{float: 'left', clear: 'both'}}
-                    id='bottomScroll'>
+                    ref={messagesEndRef}>
                 </div>
             </MessageContainer>
             <ChatInput sendMessage={sendMessage} />
