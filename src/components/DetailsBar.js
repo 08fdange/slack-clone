@@ -4,8 +4,8 @@ import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined';
 import PersonAddOutlinedIcon from '@material-ui/icons/PersonAddOutlined';
 import PersonAddDisabledOutlinedIcon from '@material-ui/icons/PersonAddDisabledOutlined';
 import SearchOutlinedIcon from '@material-ui/icons/SearchOutlined';
-import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+// import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
+// import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 const DetailsBar = ({ handleDetails }) => {
     return(
