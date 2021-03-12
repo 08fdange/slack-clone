@@ -1,6 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 import CloseOutlinedIcon from '@material-ui/icons/CloseOutlined';
+import PersonAddOutlinedIcon from '@material-ui/icons/PersonAddOutlined';
+import PersonAddDisabledOutlinedIcon from '@material-ui/icons/PersonAddDisabledOutlined';
+import SearchOutlinedIcon from '@material-ui/icons/SearchOutlined';
+import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 const DetailsBar = ({ handleDetails }) => {
     return(
@@ -11,6 +16,32 @@ const DetailsBar = ({ handleDetails }) => {
                 </HeaderText>
                 <StyledCloseIcon onClick={handleDetails}/>
             </Header>
+            <ActionContainer>
+                <IconContainer>
+                    <Circle>
+                        <PersonAddOutlinedIcon/>
+                    </Circle>
+                    <ActionText>
+                        Add
+                    </ActionText>
+                </IconContainer>
+                <IconContainer>
+                    <Circle>
+                        <PersonAddDisabledOutlinedIcon/>
+                    </Circle>
+                    <ActionText>
+                        Delete
+                    </ActionText>
+                </IconContainer>
+                <IconContainer>
+                    <Circle>
+                        <SearchOutlinedIcon/>
+                    </Circle>
+                    <ActionText>
+                        Find 
+                    </ActionText> 
+                </IconContainer>
+            </ActionContainer>
             <Body>
 
             </Body>
@@ -47,7 +78,35 @@ const StyledCloseIcon = styled(CloseOutlinedIcon)`
         background: #28292f;
     }
 `
+const ActionContainer = styled.div`
+    display: grid;
+    height: 96px;
+    grid-template-columns: 1fr 1fr 1fr;
+    color: white;
+    border-bottom: 1px solid rgba(121, 121, 121, .6);
+`
+const IconContainer = styled.div`
+    display:grid;
+    align-items: center;
+    justify-content: center;
+    grid-direction: row;
+    align-content: center;
+`
+const Circle = styled.div`
+    background-color: #3e3f42;
+    display: flex;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+`
+const ActionText = styled.div`
+    text-align: center;
+`
 const Body = styled.div`
 
 `
+
 

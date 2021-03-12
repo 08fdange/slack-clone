@@ -47,8 +47,10 @@ const App = () => {
     if (channelInfo.private) {
       payload.users = [user.uid]
     }
-    db.collection('rooms').add(payload);
-    handleClose();    
+    if (payload.name !== "") {
+      db.collection('rooms').add(payload);
+      handleClose(); 
+    }   
   }
 
   // Get Slack Channels
