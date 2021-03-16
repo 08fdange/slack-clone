@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
     }
   }));
 
-const ModalContent = ({ createChannel }) => {
+const AddChannelModal = React.forwardRef((ref,props) => {
     const classes = useStyles();
 
     const [state, setState] = useState({
@@ -58,7 +58,7 @@ const ModalContent = ({ createChannel }) => {
 
     const newChannel = () => {
         if(state.name !== "") {
-            createChannel(state);
+            props.createChannel(state);
             setState({
                 name: "",
                 description: "",
@@ -117,9 +117,9 @@ const ModalContent = ({ createChannel }) => {
         </SubmitContainer>
     </div>
     )
-}
+})
 
-export default ModalContent;
+export default AddChannelModal;
 
 const InputContainer = styled.div`
     border: 1px solid #8D8D8E;

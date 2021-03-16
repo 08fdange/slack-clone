@@ -1,8 +1,8 @@
-import React from 'react'
-import styled from 'styled-components'
-import { auth, provider} from '../firebase'
+import React from 'react';
+import styled from 'styled-components';
+import { auth, provider} from '../firebase';
 
-function Login({setUser}) {
+function Login({setUser, users}) {
 
     const signIn = () => {
         auth.signInWithPopup(provider)
@@ -15,6 +15,9 @@ function Login({setUser}) {
             setUser(newUser);
             console.log(JSON.stringify(newUser))
             localStorage.setItem('user', JSON.stringify(newUser));
+            if (!(users.some(user => user.uid === newUser.uid))) {
+                
+            }
         })
     }
 
@@ -31,7 +34,7 @@ function Login({setUser}) {
     )
 }
 
-export default Login
+export default Login;
 
 const Container = styled.div`
     width: 100%;

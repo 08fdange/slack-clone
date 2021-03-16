@@ -1,13 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import Modal from '@material-ui/core/Modal';
-import ModalContent from './components/ModalContent';
+import AddChannelModal from './components/AddChannelModal';
+import UsersModal from './components/UsersModal';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import Chat from './components/Chat';
 import DetailsBar from './components/DetailsBar';
 import Login from './components/Login';
 import styled from 'styled-components';
+import firebase from 'firebase';
 import db from './firebase';
 import { auth } from './firebase';
 import './App.css';
@@ -17,16 +19,25 @@ const App = () => {
   // useState
   const [rooms, setRooms] = useState([]);
   const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')));
+  const [users, setUsers] = useState([]);
   const [detailsBar, setDetailsBar] = useState(false);
-  const [open, setOpen] = useState(false);
+  const [userModalType, setUserModalType] = useState("Add");
+  const [openChannelModal, setOpenChannelModal] = useState(false);
+  const [openUserModal, setOpenUserModal] = useState(false);
+
 
   // Modal 
-  const handleOpen = () => {
-    setOpen(true);
+  const ref = useRef();
+  const handleOpenChannelModal = () => {
+    setOpenChannelModal(true);
+  }
+  const handleOpenUserModal = () => {
+    setOpenUserModal(true);
   }
 
   const handleClose = () => {
-    setOpen(false);
+    setOpenChannelModal(false);
+    setOpenUserModal(false);
   }
 
   // Sign Out
@@ -42,11 +53,11 @@ const App = () => {
     let payload = {
       name: channelInfo.name,
       description: channelInfo.description,
+      timestamp: firebase.firestore.Timestamp.now(),
       private: channelInfo.private
     }
-    if (channelInfo.private) {
-      payload.users = [user.uid]
-    }
+    payload.users = [user.uid]
+
     if (payload.name !== "") {
       db.collection('rooms').add(payload);
       handleClose(); 
@@ -68,31 +79,77 @@ const App = () => {
     setDetailsBar(!detailsBar);
   }
 
+  const handleUserModal = (action) => {
+    switch(action) {
+      case "add":
+        setUserModalType("Add")
+        break;
+      case "remove":
+        setUserModalType("Remove")
+        break;
+      default:
+        setUserModalType("Add")
+    }
+  }
+
+  // Handle Users on Channel
+
+  const handleUser = () => {
+    console.log(userModalType)
+  }
+
   useEffect(() => {
     getChannels();
   }, []);
+
+  useEffect(() => {
+    db.collection('users').onSnapshot((snapshot) => {
+      setUsers(snapshot.docs.map((doc) => {
+        return { id: doc.id, name: doc.data().name, uid: doc.data().uid, avatar: doc.data().avatar, email: doc.data().email }
+      }))
+    })
+  },[])
 
   return (
     <div className="App">
       <Router>
         {
           !user ?
-          <Login setUser={setUser}/>
+          <Login setUser={setUser} users={users}/>
           :
           <Container>
             <Modal
-              open={open}
+              open={openChannelModal}
               onClose={handleClose}
-            ><ModalContent
-              createChannel={createChannel}
-            />
+            >
+              <AddChannelModal
+                ref={ref}
+                createChannel={createChannel}
+              /> 
+            </Modal>
+            <Modal
+              open={openUserModal}
+              onClose={handleClose}
+            >
+              <UsersModal 
+                ref={ref}
+                type={userModalType}
+                handleUser={handleUser}
+                users={users}
+              />
             </Modal>
             <Header user={user} signOut={signOut}/>
               <Main>
-              <Sidebar rooms={rooms} user={user} handleOpen={handleOpen}/>
+              <Sidebar rooms={rooms} user={user} handleOpen={handleOpenChannelModal}/>
               <Switch>
                 <Route path='/room/:channelId'>
                   <Chat user={user} handleDetails={handleDetails}/>
+                  {detailsBar ? <DetailsBar 
+                                  handleDetails={handleDetails} 
+                                  handleUserModal={handleUserModal}
+                                  handleOpen={handleOpenUserModal} 
+                                  users={users}
+                                /> : null} 
                 </Route>
                 <Route path='/'>
                   <SelectChannel>
@@ -102,13 +159,13 @@ const App = () => {
                   </SelectChannel>
                 </Route>
               </Switch>
-              {detailsBar ? <DetailsBar handleDetails={handleDetails}/> : null}    
+                 
             </Main>
           </Container>
         } 
       </Router>
     </div>
-  );
+  )
 }
 
 export default App;
