@@ -9,7 +9,7 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import db from '../firebase'
 
-const DetailsBar = ({ handleDetails, users, handleOpen, handleUserModal}) => {
+const DetailsBar = ({ handleDetails, users, handleOpen}) => {
     let { channelId } = useParams();
     const [ channel, setChannel ] = useState();
     const [ channelUsers, setChannelUsers] = useState();
@@ -17,6 +17,14 @@ const DetailsBar = ({ handleDetails, users, handleOpen, handleUserModal}) => {
 
     const membersDrawerToggle = () => {
         setMembersDrawer(!membersDrawer)
+    }
+
+    const addUserModal = () => {
+        handleOpen("add")
+    }
+
+    const removeUserModal = () => {
+        handleOpen("remove")
     }
 
     useEffect(() => {
@@ -72,7 +80,7 @@ const DetailsBar = ({ handleDetails, users, handleOpen, handleUserModal}) => {
             </Header>
             <ActionContainer>
                 <IconContainer>
-                    <Circle onClick={handleOpen}>
+                    <Circle onClick={addUserModal}>
                         <PersonAddOutlinedIcon/>
                     </Circle>
                     <ActionText>
@@ -80,7 +88,7 @@ const DetailsBar = ({ handleDetails, users, handleOpen, handleUserModal}) => {
                     </ActionText>
                 </IconContainer>
                 <IconContainer>
-                    <Circle onClick={handleOpen}>
+                    <Circle onClick={removeUserModal}>
                         <PersonAddDisabledOutlinedIcon/>
                     </Circle>
                     <ActionText>
@@ -132,7 +140,7 @@ const DetailsBar = ({ handleDetails, users, handleOpen, handleUserModal}) => {
 export default DetailsBar;
 
 const Container = styled.div`
-    width: 260px;
+    width: 230px;
     background: rgb(20 18 22);
     border-left: 1px solid rgba(121, 121, 121, .6);
 `

@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { makeStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+import { withStyles } from '@material-ui/core/styles';
 import styled from 'styled-components';
+import { withRouter } from 'react-router';
+import firebase from 'firebase';
+import db from '../firebase';
 
-const useStyles = makeStyles((theme) => ({
+const styles = (theme) => ({
     paper: {
       top: '50%',
       left: '50%',
@@ -19,56 +23,89 @@ const useStyles = makeStyles((theme) => ({
       "&:focus": {
         outline: "none"
       }
+    },
+    autocomplete: {
+        fullWidth: true,
+        flex: 1,
+        border: 'none',
+        fontSize: '13px',
+        background: '#1a1b1f',
+        color: '#C6C8C9',
+        paddingRight: '10px',
+        focused: {
+            outline: "none",
+        },
+    },
+  });
+
+class UsersModal extends React.Component {
+
+    state = {
+        user: []
     }
-  }));
 
-const UsersModal = React.forwardRef((ref,props) => {
-    const classes = useStyles();
-
-    const [state, setState] = useState({ name: "" })
-
-    const handleChange = (event) => {
-        const {name, value} = event.target;
-        setState(prevState => ({
-            ...prevState,
-            [name]: value
-        }));
+    handleChange = (event,value) => {
+        this.setState({user: value})
     }
 
-    return(
-    <div className={classes.paper}>
-        <h2>Add people</h2>
-        <p style={{color: '#aeb2b5'}}>
-            {props.channelName}
-        </p>
-        <label><b>Name</b></label>
-        <InputContainer>
-            <form>
-                <Autocomplete
-                    options={props.users}
-                    name='user'
-                    value={state.user}
-                    placeholder='Enter a name...'
-                    onChange={(event) => handleChange(event)}
-                    getOptionLabel={(option) => option.name}
-                    renderInput={(params) => <input
-                        {...params}
-                        type='text'
-                    />}
-                />
-            </form>
-        </InputContainer>
-        <SubmitContainer>
-            <SubmitButton
-                type='submit'
-                onClick={props.handleUser}
-            ><b>Add</b></SubmitButton>
-        </SubmitContainer>
-    </div>
-    )
-})
+    handleSubmit = (event, state) => {
+        let userId = state.user.uid;
+        let channelId = this.props.match.params.channelId;
+        let roomRef = db.collection('rooms').doc(channelId);
+        if (this.props.type === "Add") {
+            roomRef.update({
+                users: firebase.firestore.FieldValue.arrayUnion(userId)
+            });
+        } else if (this.props.type === "Remove") {
+            roomRef.update({
+                users: firebase.firestore.FieldValue.arrayRemove(userId)
+            });
+        }
+        
+        this.props.handleClose();
+    }
 
-export default UsersModal;
+    render() {
+        const { classes } = this.props;
+        return( 
+            <div className={classes.paper}>
+                <div className='add-user'>
+                <h2>{this.props.type} user</h2>
+                <p style={{color: '#aeb2b5'}}>
+                    {this.props.channelName}
+                </p>
+                <label><b>Name</b></label>
+                <InputContainer>
+                    <form>
+                    {this.props.users ?
+                        <Autocomplete
+                            className={classes.autocomplete}
+                            id='user-autocomplete'
+                            options={this.props.users}
+                            getOptionLabel={(option) => option.name}
+                            onChange={this.handleChange}
+                            renderInput={(params) => <TextField
+                                name='name'
+                                placeholder="Enter a name..."
+                                {...params}
+                            />}
+                        /> : null }
+                    </form>
+                </InputContainer>
+                <SubmitContainer>
+                    <SubmitButton
+                        type='submit'
+                        onClick={(event, state) => this.handleSubmit(event, this.state)}
+                    ><b>{this.props.type}</b>
+                    </SubmitButton>
+                </SubmitContainer> 
+                </div> 
+            </div>
+        )
+    }      
+}
+
+export default withRouter(withStyles(styles)(UsersModal));
 
 const InputContainer = styled.div`
     border: 1px solid #8D8D8E;

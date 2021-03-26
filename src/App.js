@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect} from 'react';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import Modal from '@material-ui/core/Modal';
 import AddChannelModal from './components/AddChannelModal';
@@ -27,11 +27,16 @@ const App = () => {
 
 
   // Modal 
-  const ref = useRef();
+  // const ref = useRef();
   const handleOpenChannelModal = () => {
     setOpenChannelModal(true);
   }
-  const handleOpenUserModal = () => {
+  const handleOpenUserModal = (action) => {
+    if (action === 'add') {
+      setUserModalType("Add")
+    } else if (action === 'remove') {
+      setUserModalType("Remove")
+    }
     setOpenUserModal(true);
   }
 
@@ -75,27 +80,8 @@ const App = () => {
 
   // Details Bar 
   
-  const handleDetails = () => {
+  const handleDetails = (action) => {
     setDetailsBar(!detailsBar);
-  }
-
-  const handleUserModal = (action) => {
-    switch(action) {
-      case "add":
-        setUserModalType("Add")
-        break;
-      case "remove":
-        setUserModalType("Remove")
-        break;
-      default:
-        setUserModalType("Add")
-    }
-  }
-
-  // Handle Users on Channel
-
-  const handleUser = () => {
-    console.log(userModalType)
   }
 
   useEffect(() => {
@@ -122,31 +108,30 @@ const App = () => {
               open={openChannelModal}
               onClose={handleClose}
             >
-              <AddChannelModal
-                ref={ref}
+              <div><AddChannelModal
+                // ref={ref}
                 createChannel={createChannel}
-              /> 
+              /></div>
             </Modal>
-            <Modal
-              open={openUserModal}
-              onClose={handleClose}
-            >
-              <UsersModal 
-                ref={ref}
-                type={userModalType}
-                handleUser={handleUser}
-                users={users}
-              />
-            </Modal>
+            
             <Header user={user} signOut={signOut}/>
               <Main>
               <Sidebar rooms={rooms} user={user} handleOpen={handleOpenChannelModal}/>
               <Switch>
                 <Route path='/room/:channelId'>
+                  <Modal
+                    open={openUserModal}
+                    onClose={handleClose}
+                  >
+                    <div><UsersModal 
+                      type={userModalType}
+                      users={users}
+                      handleClose={handleClose}
+                    /></div>
+                  </Modal>
                   <Chat user={user} handleDetails={handleDetails}/>
                   {detailsBar ? <DetailsBar 
                                   handleDetails={handleDetails} 
-                                  handleUserModal={handleUserModal}
                                   handleOpen={handleOpenUserModal} 
                                   users={users}
                                 /> : null} 

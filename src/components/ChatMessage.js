@@ -51,12 +51,11 @@ const Message = styled.div`
 const UserAvatar = styled.div`
     width: 36px;
     height: 36px;
-    border-radius: 3px;
     over-flow: hidden;
     margin-right: 8px;
-
     img {
         width: 100%;
+        border-radius: 3px;
     }
 `
 const MessageContent = styled.div`

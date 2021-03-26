@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Switch from '@material-ui/core/Switch';
-import { makeStyles } from '@material-ui/core/styles';
+import { withStyles } from '@material-ui/core/styles';
 import styled from 'styled-components';
 
-const useStyles = makeStyles((theme) => ({
+const styles = theme => ({
     paper: {
       top: '50%',
       left: '50%',
@@ -22,44 +22,45 @@ const useStyles = makeStyles((theme) => ({
     },
     toggle: {
         color: '#fff',
-        '&$checked': {
+        '&:checked': {
             color: '#fff',
         },
-        '&$checked + $track': {
+        '&:checked + $track': {
             backgroundColor: '#fff',
         },
-    }
-  }));
+    },
+    disabled: {},
+  });
 
-const AddChannelModal = React.forwardRef((ref,props) => {
-    const classes = useStyles();
+class AddChannelModal extends React.Component {
 
-    const [state, setState] = useState({
+    state = {
         name: "",
         description: "",
         private: false
-    })
+    }
 
-    const handleChange = (event) => {
+    handleChange = (event) => {
+        event.preventDefault();
         const { name, value } = event.target;
-        setState(prevState => ({
+        this.setState(prevState => ({
             ...prevState,
             [name]: value
         }));
     }
 
-    const handleSwitch = (event) => {
+    handleSwitch = (event) => {
         const { name, checked} = event.target;
-        setState(prevState => ({
+        this.setState(prevState => ({
             ...prevState,
             [name]: checked
         }))
     }
 
-    const newChannel = () => {
-        if(state.name !== "") {
-            props.createChannel(state);
-            setState({
+    newChannel = () => {
+        if(this.state.name !== "") {
+            this.props.createChannel(this.state);
+            this.setState({
                 name: "",
                 description: "",
                 private: false
@@ -67,59 +68,62 @@ const AddChannelModal = React.forwardRef((ref,props) => {
         }
     }
 
-    return(
-    <div className={classes.paper}>
-        <h2>Create Channel</h2>
-        <p style={{color: '#aeb2b5'}}>
-            Channels are where your team communicates. They’re best when organized around a topic — #marketing, for example.
-        </p>
-        <label><b>Name</b></label>
-        <InputContainer>
-            <form>
-                <input
-                    type='text'
-                    name='name'
-                    value={state.name}
-                    placeholder='Channel here...'
-                    onChange={(event) => handleChange(event)}
-                />
-            </form>
-        </InputContainer>
-        <label><b>Description (optional)</b></label>
-        <InputContainer>
-            <form>
-                <input 
-                    type='text'
-                    name='description'
-                    value={state.description}
-                    onChange={(event) => handleChange(event)}
-                />
-            </form>
-        </InputContainer>
-        <label><b>Make private</b></label>
-        <PrivateToggleContainer>
-            <p style={{color: '#aeb2b5'}}>
-                When a channel is set to private, it can only be viewed or joined by invitation.
-            </p>
-            <Switch 
-                name='private'
-                className={classes.toggle}
-                color='primary'
-                checked={state.private}
-                onChange={(event) => handleSwitch(event)}
-            />
-        </PrivateToggleContainer>
-        <SubmitContainer>
-            <SubmitButton
-                type='submit'
-                onClick={newChannel}
-            ><b>Create</b></SubmitButton>
-        </SubmitContainer>
-    </div>
-    )
-})
+    render() {
+        const { classes } = this.props;
+        return(
+            <div className={classes.paper}>
+                <h2>Create Channel</h2>
+                <p style={{color: '#aeb2b5'}}>
+                    Channels are where your team communicates. They’re best when organized around a topic — #marketing, for example.
+                </p>
+                <label><b>Name</b></label>
+                <InputContainer>
+                    <form>
+                        <input
+                            type='text'
+                            name='name'
+                            value={this.state.name}
+                            placeholder='Channel here...'
+                            onChange={(event) => this.handleChange(event)}
+                        />
+                    </form>
+                </InputContainer>
+                <label><b>Description (optional)</b></label>
+                <InputContainer>
+                    <form>
+                        <input 
+                            type='text'
+                            name='description'
+                            value={this.state.description}
+                            onChange={(event) => this.handleChange(event)}
+                        />
+                    </form>
+                </InputContainer>
+                <label><b>Make private</b></label>
+                <PrivateToggleContainer>
+                    <p style={{color: '#aeb2b5'}}>
+                        When a channel is set to private, it can only be viewed or joined by invitation.
+                    </p>
+                    <Switch 
+                        name='private'
+                        className={classes.toggle}
+                        color='primary'
+                        checked={this.state.private}
+                        onChange={(event) => this.handleSwitch(event)}
+                    />
+                </PrivateToggleContainer>
+                <SubmitContainer>
+                    <SubmitButton
+                        type='submit'
+                        onClick={this.newChannel}
+                    ><b>Create</b></SubmitButton>
+                </SubmitContainer>
+            </div>
+        )
+    }
+}
 
-export default AddChannelModal;
+export default withStyles(styles)(AddChannelModal);
 
 const InputContainer = styled.div`
     border: 1px solid #8D8D8E;
