@@ -1,6 +1,6 @@
 # Slack-Clone (FD Edition)
 This app was created by Frank D'Angelo to be a very similar application to Slack. 
-It was built with React and Firebase
+Built with React and Firebase.
 
 # Getting Started with Slack Clone (FD Edition)
 
